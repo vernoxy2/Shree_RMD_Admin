@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #A63A4B;
+  --color-secondary: #676767;
+  --color-Bg: #FFF6F6;
+  --font-inter: 'Inter', sans-serif;
+  --font-poppins: 'Poppins', sans-serif;
+}
+
+@keyframes scrollLeft {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes slideUpHoldDown {
+  0%   { transform: translateY(40px); opacity: 0; }
+  20%  { transform: translateY(0px);  opacity: 1; }
+  70%  { transform: translateY(0px);  opacity: 1; }
+  100% { transform: translateY(40px); opacity: 0; }
+}
