@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { db, storage } from "../../../firebase";
+import { db } from "../../../firebase";
 import {
   collection, addDoc, getDocs, deleteDoc, doc,
   updateDoc, serverTimestamp, query, orderBy,
 } from "firebase/firestore";
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+import { supabase } from "../../../supabase";
 import { FiUpload, FiEdit2, FiTrash2, FiEye, FiX } from "react-icons/fi";
 
 const AdmissionUpdate = () => {
@@ -12,10 +12,9 @@ const AdmissionUpdate = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editId, setEditId] = useState(null);
-  const [form, setForm] = useState({ title: "", year: "" });
+  const [form, setForm] = useState({ year: "" });
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [saving, setSaving] = useState(false);
 
   const colRef = collection(db, "cllg_admission_updates");
@@ -31,49 +30,49 @@ const AdmissionUpdate = () => {
   useEffect(() => { fetchRecords(); }, []);
 
   const resetForm = () => {
-    setForm({ title: "", year: "" });
+    setForm({ year: "" });
     setFile(null);
     setEditId(null);
-    setProgress(0);
     setShowForm(false);
   };
 
-  const uploadFile = (file) => {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      resolve({
-        url: reader.result, // base64 data URL
-        path: null
-      });
-    };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-};
+  const uploadToSupabase = async (file) => {
+    const fileName = `${Date.now()}_${file.name.replace(/\s+/g, "_")}`;
+    const { data, error } = await supabase.storage
+      .from("admission-files")
+      .upload(fileName, file, { cacheControl: "3600", upsert: false });
+
+    if (error) throw new Error(error.message);
+
+    const { data: urlData } = supabase.storage
+      .from("admission-files")
+      .getPublicUrl(fileName);
+
+    return { url: urlData.publicUrl, path: fileName };
+  };
 
   const handleSubmit = async () => {
-    if (!form.title || !form.year) return alert("Title and Year are required.");
+    if (!form.year) return alert("Academic Year is required.");
     if (!editId && !file) return alert("Please select a file to upload.");
     setSaving(true);
 
     try {
       if (editId) {
-        const updateData = { title: form.title, year: form.year };
+        const updateData = { year: form.year };
         if (file) {
           setUploading(true);
-          const { url, path } = await uploadFile(file);
+          const { url, path } = await uploadToSupabase(file);
           setUploading(false);
           updateData.fileUrl = url;
           updateData.filePath = path;
+          updateData.fileName = file.name;
         }
-        await deleteDoc(doc(db, "cllg_admission_updates", rec.id));
+        await updateDoc(doc(db, "cllg_admission_updates", editId), updateData);
       } else {
         setUploading(true);
-        const { url, path } = await uploadFile(file);
+        const { url, path } = await uploadToSupabase(file);
         setUploading(false);
         await addDoc(colRef, {
-          title: form.title,
           year: form.year,
           fileUrl: url,
           filePath: path,
@@ -90,19 +89,17 @@ const AdmissionUpdate = () => {
   };
 
   const handleEdit = (rec) => {
-    setForm({ title: rec.title, year: rec.year });
+    setForm({ year: rec.year });
     setEditId(rec.id);
     setShowForm(true);
   };
 
   const handleDelete = async (rec) => {
     if (!confirm("Delete this record?")) return;
-    try {
-      if (rec.filePath) {
-        await deleteObject(ref(storage, rec.filePath));
-      }
-    } catch (_) {}
-    await deleteDoc(doc(db, "admission_updates", rec.id));
+    if (rec.filePath) {
+      await supabase.storage.from("admission-files").remove([rec.filePath]);
+    }
+    await deleteDoc(doc(db, "cllg_admission_updates", rec.id));
     fetchRecords();
   };
 
@@ -117,18 +114,20 @@ const AdmissionUpdate = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Admission Updates</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Admission Updates</h1>
           <p className="text-sm text-gray-400 mt-0.5">Manage admission documents by year</p>
         </div>
         <button
           onClick={() => { resetForm(); setShowForm(true); }}
-          className="bg-[#7B1C2E] text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-[#6a1727] transition flex items-center gap-2"
+          className="bg-[#7B1C2E] text-white px-3 sm:px-4 py-2 rounded-xl text-sm font-medium hover:bg-[#6a1727] transition flex items-center gap-2"
         >
-          <FiUpload size={14} /> Add Record
+          <FiUpload size={14} />
+          <span className="hidden sm:inline">Add Record</span>
+          <span className="sm:hidden">Add</span>
         </button>
       </div>
 
-      {/* Form Modal */}
+      {/* Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4">
           <div className="bg-white rounded-2xl shadow-2xl p-6 w-full max-w-md">
@@ -142,16 +141,6 @@ const AdmissionUpdate = () => {
             </div>
 
             <div className="space-y-4">
-              <div>
-                <label className="text-sm text-gray-600 block mb-1">Title *</label>
-                <input
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#7B1C2E]"
-                  placeholder="e.g. Student Details 2025-2026"
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                />
-              </div>
-
               <div>
                 <label className="text-sm text-gray-600 block mb-1">Academic Year *</label>
                 <input
@@ -168,8 +157,8 @@ const AdmissionUpdate = () => {
                 </label>
                 <label className="flex flex-col items-center justify-center w-full h-28 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-[#7B1C2E] hover:bg-rose-50 transition">
                   <FiUpload size={20} className="text-gray-400 mb-1" />
-                  <span className="text-xs text-gray-400">
-                    {file ? file.name : "Click to upload PDF / DOC / '/n'Image should be less than 1MB"}
+                  <span className="text-xs text-gray-400 text-center px-2">
+                    {file ? file.name : "Click to upload PDF / DOC / Image"}
                   </span>
                   <input
                     type="file"
@@ -180,18 +169,14 @@ const AdmissionUpdate = () => {
                 </label>
               </div>
 
-              {/* Upload Progress */}
               {uploading && (
                 <div>
                   <div className="flex justify-between text-xs text-gray-500 mb-1">
                     <span>Uploading...</span>
-                    <span>{progress}%</span>
+                    <span>Please wait...</span>
                   </div>
                   <div className="w-full bg-gray-100 rounded-full h-2">
-                    <div
-                      className="bg-[#7B1C2E] h-2 rounded-full transition-all"
-                      style={{ width: `${progress}%` }}
-                    ></div>
+                    <div className="bg-[#7B1C2E] h-2 rounded-full animate-pulse w-full"></div>
                   </div>
                 </div>
               )}
@@ -228,53 +213,57 @@ const AdmissionUpdate = () => {
           {Object.keys(grouped).sort((a, b) => b.localeCompare(a)).map((year) => (
             <div key={year}>
               <div className="flex items-center gap-4 mb-4">
-                <h2 className="text-base font-semibold text-gray-700">
+                <h2 className="text-base font-semibold text-gray-700 whitespace-nowrap">
                   Admission Updates <span className="text-[#7B1C2E]">{year}</span>
                 </h2>
                 <div className="flex-1 h-px bg-gray-200"></div>
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-400 whitespace-nowrap">
                   {grouped[year].length} record{grouped[year].length > 1 ? "s" : ""}
                 </span>
               </div>
+
               <div className="space-y-3">
                 {grouped[year].map((rec, idx) => (
                   <div
                     key={rec.id}
-                    className="bg-white rounded-xl border border-gray-100 px-5 py-4 flex items-center justify-between shadow-sm hover:shadow-md transition"
+                    className="bg-white rounded-xl border border-gray-100 px-4 sm:px-5 py-4 flex items-center justify-between shadow-sm hover:shadow-md transition gap-3"
                   >
-                    <div className="flex items-center gap-4">
-                      <span className="text-sm font-bold text-gray-300 w-6">
+                    {/* Left: index + filename */}
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="text-sm font-bold text-gray-300 w-6 shrink-0">
                         {String(idx + 1).padStart(2, "0")}
                       </span>
-                      <div>
-                        <span className="text-sm font-medium text-gray-700">{rec.title}</span>
-                        {rec.fileName && (
-                          <p className="text-xs text-gray-400 mt-0.5">{rec.fileName}</p>
-                        )}
-                      </div>
+                      <span className="text-sm font-medium text-gray-700 break-all sm:truncate">
+                        {rec.fileName || "—"}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-2">
+
+                    {/* Right: action buttons */}
+                    <div className="flex items-center gap-1.5 shrink-0">
                       {rec.fileUrl && (
                         <a
                           href={rec.fileUrl}
                           target="_blank"
                           rel="noreferrer"
-                          className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
+                          className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
                         >
-                          <FiEye size={12} /> View
+                          <FiEye size={13} />
+                          <span className="hidden sm:inline">View</span>
                         </a>
                       )}
                       <button
                         onClick={() => handleEdit(rec)}
-                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                        className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
                       >
-                        <FiEdit2 size={12} /> Edit
+                        <FiEdit2 size={13} />
+                        <span className="hidden sm:inline">Edit</span>
                       </button>
                       <button
                         onClick={() => handleDelete(rec)}
-                        className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
+                        className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition"
                       >
-                        <FiTrash2 size={12} /> Delete
+                        <FiTrash2 size={13} />
+                        <span className="hidden sm:inline">Delete</span>
                       </button>
                     </div>
                   </div>
