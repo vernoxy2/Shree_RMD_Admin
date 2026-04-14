@@ -8,6 +8,14 @@ const Login = lazy(() => import("./Pages/Authentication/Login"));
 const CollegeDashboard = lazy(() => import("./Pages/Dashboard/CollegeDashboard"));
 const HospitalDashboard = lazy(() => import("./Pages/Dashboard/HospitalDashboard"));
 const AdmissionUpdate = lazy(() => import("./Pages/College/AdmissionUpdate"));
+const UniversityExamination = lazy(() => import("./Pages/College/UniversityExamination"));
+const UniversityResults = lazy(() => import("./Pages/College/UniversityResults"));
+const AcademicCalendar = lazy(() => import("./Pages/College/AcademicCalendar"));
+const BAMSLecturesTimetable = lazy(() => import("./Pages/College/BAMSLecturesTimetable"));
+const SyllabusDetail = lazy(() => import("./Pages/College/SyllabusDetail"));
+const GAUQuestionPaperLink = lazy(() => import("./Pages/College/GAUQuestionPaperLink"));
+const ForthComingTheoryExamination = lazy(() => import("./Pages/College/ForthComingTheoryExamination"));
+const ForthComingPracticalExamination = lazy(() => import("./Pages/College/ForthComingPracticalExamination"));
 
 const Loader = () => (
   <div className="flex justify-center items-center h-screen bg-gray-50">
@@ -34,6 +42,14 @@ const App = () => {
         >
           <Route index element={<CollegeDashboard />} />
           <Route path="admission-update" element={<AdmissionUpdate />} />
+          <Route path="university-examination" element={<UniversityExamination />} />
+          <Route path="university-results" element={<UniversityResults />} />
+          <Route path="academic-calendar" element={<AcademicCalendar />} />
+          <Route path="bams-lectures-timetable" element={<BAMSLecturesTimetable />} />
+          <Route path="syllabus-detail" element={<SyllabusDetail />} />
+          <Route path="gau-question-paper" element={<GAUQuestionPaperLink />} />
+          <Route path="forth-coming-theory" element={<ForthComingTheoryExamination />} />
+          <Route path="forth-coming-practical" element={<ForthComingPracticalExamination />} />
         </Route>
 
         {/* Hospital Admin - with sidebar layout */}
