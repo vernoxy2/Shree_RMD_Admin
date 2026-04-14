@@ -17,6 +17,19 @@ const collegeNavItems = [
       { label: "Admission Update", path: "/college-dashboard/admission-update", icon: <FaFileAlt size={16} /> },
     ],
   },
+  {
+    section: "UNIVERSITY EXAMINATION",
+    items: [
+      { label: "University Examination Timetable", path: "/college-dashboard/university-examination", icon: <FaFileAlt size={16} /> },
+      { label: "University Results", path: "/college-dashboard/university-results", icon: <FaFileAlt size={16} /> },
+      { label: "Academic Calendar", path: "/college-dashboard/academic-calendar", icon: <FaFileAlt size={16} /> },
+      { label: "BAMS Lectures Timetable", path: "/college-dashboard/bams-lectures-timetable", icon: <FaFileAlt size={16} /> },
+      { label: "Syllabus Detail", path: "/college-dashboard/syllabus-detail", icon: <FaFileAlt size={16} /> },
+      { label: "GAU Question Paper Link", path: "/college-dashboard/gau-question-paper", icon: <FaFileAlt size={16} /> },
+      { label: "Forth Coming Theory Exam", path: "/college-dashboard/forth-coming-theory", icon: <FaFileAlt size={16} /> },
+      { label: "Forth Coming Practical Exam", path: "/college-dashboard/forth-coming-practical", icon: <FaFileAlt size={16} /> },
+    ],
+  },
 ];
 
 const CollegeLayout = () => {
