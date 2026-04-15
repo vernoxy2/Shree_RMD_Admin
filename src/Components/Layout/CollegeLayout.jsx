@@ -30,6 +30,27 @@ const collegeNavItems = [
       { label: "Forth Coming Practical Exam", path: "/college-dashboard/forth-coming-practical", icon: <FaFileAlt size={16} /> },
     ],
   },
+  {
+    section: "STUDENTS",
+    items: [
+      { label: "Student Detail", path: "/college-dashboard/student-detail", icon: <FaFileAlt size={16} /> },
+      { label: "Activities", path: "/college-dashboard/activities", icon: <FaFileAlt size={16} /> },
+    ],
+  },
+  {
+    section: "ATTENDANCE",
+    items: [
+      { label: "Student Attendance", path: "/college-dashboard/student-attendance", icon: <FaFileAlt size={16} /> },
+      { label: "Staff Attendance", path: "/college-dashboard/staff-attendance", icon: <FaFileAlt size={16} /> },
+    ],
+  },
+  {
+    section: "FACULTY",
+    items: [
+      { label: "Staff Details", path: "/college-dashboard/staff-details", icon: <FaFileAlt size={16} /> },
+      { label: "Fee Structure", path: "/college-dashboard/fee-structure", icon: <FaFileAlt size={16} /> },
+    ],
+  },
 ];
 
 const CollegeLayout = () => {
