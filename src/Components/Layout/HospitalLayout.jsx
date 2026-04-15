@@ -9,6 +9,13 @@ const hospitalNavItems = [
       { label: "Dashboard", path: "/hospital-dashboard", icon: <MdDashboard size={18} />, end: true },
     ],
   },
+  {
+    section: "Hospital Management",
+    items: [
+      { label: "Hospital Attendance", path: "/hospital-dashboard/hospital-attendance", icon: <MdLocalHospital size={18} /> },
+      { label: "Outreach Program", path: "/hospital-dashboard/outreach-program", icon: <MdLocalHospital size={18} /> },
+    ],
+  },
 ];
 
 const HospitalLayout = () => {

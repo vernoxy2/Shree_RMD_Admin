@@ -7,6 +7,8 @@ import HospitalLayout from "./Components/Layout/HospitalLayout";
 const Login = lazy(() => import("./Pages/Authentication/Login"));
 const CollegeDashboard = lazy(() => import("./Pages/Dashboard/CollegeDashboard"));
 const HospitalDashboard = lazy(() => import("./Pages/Dashboard/HospitalDashboard"));
+const HospitalAttendance = lazy(() => import("./Pages/Hospital/HospitalAttendance"));
+const OutreachProgram = lazy(() => import("./Pages/Hospital/OutreachProgram"));
 const AdmissionUpdate = lazy(() => import("./Pages/College/AdmissionUpdate"));
 const UniversityExamination = lazy(() => import("./Pages/College/UniversityExamination"));
 const UniversityResults = lazy(() => import("./Pages/College/UniversityResults"));
@@ -74,6 +76,8 @@ const App = () => {
           }
         >
           <Route index element={<HospitalDashboard />} />
+          <Route path="hospital-attendance" element={<HospitalAttendance />} />
+          <Route path="outreach-program" element={<OutreachProgram />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/admin-login" replace />} />
