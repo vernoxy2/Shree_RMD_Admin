@@ -16,6 +16,12 @@ const SyllabusDetail = lazy(() => import("./Pages/College/SyllabusDetail"));
 const GAUQuestionPaperLink = lazy(() => import("./Pages/College/GAUQuestionPaperLink"));
 const ForthComingTheoryExamination = lazy(() => import("./Pages/College/ForthComingTheoryExamination"));
 const ForthComingPracticalExamination = lazy(() => import("./Pages/College/ForthComingPracticalExamination"));
+const StudentDetail = lazy(() => import("./Pages/College/Student/StudentDetail"));
+const Activities = lazy(() => import("./Pages/College/Student/Activities"));
+const StudentAttendance = lazy(() => import("./Pages/College/Attendance/StudentAttendance"));
+const StaffAttendance = lazy(() => import("./Pages/College/Attendance/StaffAttendance"));
+const StaffDetails = lazy(() => import("./Pages/College/Faculty/StaffDetails"));
+const FeeStructure = lazy(() => import("./Pages/College/Faculty/FeeStructure"));
 
 const Loader = () => (
   <div className="flex justify-center items-center h-screen bg-gray-50">
@@ -50,6 +56,12 @@ const App = () => {
           <Route path="gau-question-paper" element={<GAUQuestionPaperLink />} />
           <Route path="forth-coming-theory" element={<ForthComingTheoryExamination />} />
           <Route path="forth-coming-practical" element={<ForthComingPracticalExamination />} />
+          <Route path="student-detail" element={<StudentDetail />} />
+          <Route path="activities" element={<Activities />} />
+          <Route path="student-attendance" element={<StudentAttendance />} />
+          <Route path="staff-attendance" element={<StaffAttendance />} />
+          <Route path="staff-details" element={<StaffDetails />} />
+          <Route path="fee-structure" element={<FeeStructure />} />
         </Route>
 
         {/* Hospital Admin - with sidebar layout */}
