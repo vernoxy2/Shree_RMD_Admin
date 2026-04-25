@@ -24,6 +24,7 @@ const StudentAttendance = lazy(() => import("./Pages/College/Attendance/StudentA
 const StaffAttendance = lazy(() => import("./Pages/College/Attendance/StaffAttendance"));
 const StaffDetails = lazy(() => import("./Pages/College/Faculty/StaffDetails"));
 const FeeStructure = lazy(() => import("./Pages/College/Faculty/FeeStructure"));
+const ResearchWork = lazy(() => import("./Pages/College/Faculty/ResearchWork"));
 
 const Loader = () => (
   <div className="flex justify-center items-center h-screen bg-gray-50">
@@ -64,6 +65,7 @@ const App = () => {
           <Route path="staff-attendance" element={<StaffAttendance />} />
           <Route path="staff-details" element={<StaffDetails />} />
           <Route path="fee-structure" element={<FeeStructure />} />
+          <Route path="research-work" element={<ResearchWork />} />
         </Route>
 
         {/* Hospital Admin - with sidebar layout */}

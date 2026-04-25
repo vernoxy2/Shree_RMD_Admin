@@ -49,6 +49,7 @@ const collegeNavItems = [
     items: [
       { label: "Staff Details", path: "/college-dashboard/staff-details", icon: <FaFileAlt size={16} /> },
       { label: "Fee Structure", path: "/college-dashboard/fee-structure", icon: <FaFileAlt size={16} /> },
+      { label: "Research Work and Publication", path: "/college-dashboard/research-work", icon: <FaFileAlt size={16} /> },
     ],
   },
 ];
