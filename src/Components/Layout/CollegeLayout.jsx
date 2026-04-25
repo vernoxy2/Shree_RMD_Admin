@@ -52,6 +52,12 @@ const collegeNavItems = [
       { label: "Research Work and Publication", path: "/college-dashboard/research-work", icon: <FaFileAlt size={16} /> },
     ],
   },
+  {
+    section: "MEDIA",
+    items: [
+      { label: "Gallery", path: "/college-dashboard/gallery", icon: <FaFileAlt size={16} /> },
+    ],
+  },
 ];
 
 const CollegeLayout = () => {

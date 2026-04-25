@@ -9,6 +9,7 @@ const CollegeDashboard = lazy(() => import("./Pages/Dashboard/CollegeDashboard")
 const HospitalDashboard = lazy(() => import("./Pages/Dashboard/HospitalDashboard"));
 const HospitalAttendance = lazy(() => import("./Pages/Hospital/HospitalAttendance"));
 const OutreachProgram = lazy(() => import("./Pages/Hospital/OutreachProgram"));
+const HospitalStaffManagement = lazy(() => import("./Pages/Hospital/HospitalStaffManagement"));
 const AdmissionUpdate = lazy(() => import("./Pages/College/AdmissionUpdate"));
 const UniversityExamination = lazy(() => import("./Pages/College/UniversityExamination"));
 const UniversityResults = lazy(() => import("./Pages/College/UniversityResults"));
@@ -25,6 +26,9 @@ const StaffAttendance = lazy(() => import("./Pages/College/Attendance/StaffAtten
 const StaffDetails = lazy(() => import("./Pages/College/Faculty/StaffDetails"));
 const FeeStructure = lazy(() => import("./Pages/College/Faculty/FeeStructure"));
 const ResearchWork = lazy(() => import("./Pages/College/Faculty/ResearchWork"));
+const GalleryManagement = lazy(() => import("./Pages/College/GalleryManagement"));
+const Gallery = lazy(() => import("./Pages/Gallery/Gallery"));
+const PublicHospitalStaff = lazy(() => import("./Pages/Hospital/PublicHospitalStaff"));
 
 const Loader = () => (
   <div className="flex justify-center items-center h-screen bg-gray-50">
@@ -39,6 +43,9 @@ const App = () => {
         {/* Public */}
         <Route path="/" element={<Navigate to="/admin-login" replace />} />
         <Route path="/admin-login" element={<Login />} />
+        <Route path="/gallery" element={<Gallery />} />
+        <Route path="/gallery/:category" element={<Gallery />} />
+        <Route path="/ayurved-hospital/hospital-staff" element={<PublicHospitalStaff />} />
 
         {/* College Admin - with sidebar layout */}
         <Route
@@ -66,6 +73,7 @@ const App = () => {
           <Route path="staff-details" element={<StaffDetails />} />
           <Route path="fee-structure" element={<FeeStructure />} />
           <Route path="research-work" element={<ResearchWork />} />
+          <Route path="gallery" element={<GalleryManagement />} />
         </Route>
 
         {/* Hospital Admin - with sidebar layout */}
@@ -80,6 +88,7 @@ const App = () => {
           <Route index element={<HospitalDashboard />} />
           <Route path="hospital-attendance" element={<HospitalAttendance />} />
           <Route path="outreach-program" element={<OutreachProgram />} />
+          <Route path="hospital-staff" element={<HospitalStaffManagement />} />
         </Route>
 
         <Route path="*" element={<Navigate to="/admin-login" replace />} />
