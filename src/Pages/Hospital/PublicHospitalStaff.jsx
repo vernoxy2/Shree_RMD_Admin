@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import PrimaryHeader from "../../Components/Ui/PrimaryHeader";
 import HospitalBg from "../../assets/hero.png"; 

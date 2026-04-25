@@ -4,7 +4,7 @@ import GalleryBg from "../../assets/hero.png";
 import { GalleryItems as staticGalleryItems } from "./GalleryItems";
 import { IoIosArrowBack } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
-import { db } from "../../firebase";
+import { db } from "../../../firebase";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 
 const ALL_TAGS = [
