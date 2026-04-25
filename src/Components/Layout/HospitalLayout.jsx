@@ -14,6 +14,7 @@ const hospitalNavItems = [
     items: [
       { label: "Hospital Attendance", path: "/hospital-dashboard/hospital-attendance", icon: <MdLocalHospital size={18} /> },
       { label: "Outreach Program", path: "/hospital-dashboard/outreach-program", icon: <MdLocalHospital size={18} /> },
+      { label: "Hospital Staff", path: "/hospital-dashboard/hospital-staff", icon: <MdLocalHospital size={18} /> },
     ],
   },
 ];
